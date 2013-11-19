@@ -8,10 +8,10 @@
  * @author trevor
  *
  */
-public class QuickFind extends DynamicConnectivity {
-	
+public class QuickFind implements DynamicConnectivity {
+	private int[] roots;
 	/**
-	 * Contructs a QuickFind object with a given number of
+	 * Constructs a QuickFind object with a given number of
 	 * individual nodes to start with. Default root for
 	 * each node is itself (all disjoint sets).
 	 * 
@@ -25,7 +25,7 @@ public class QuickFind extends DynamicConnectivity {
 	}
 
 	@Override
-	void union(int i, int j) {
+	public void union(int i, int j) {
 		int iRoot = find(i);
 		int jRoot = find(j);
 
@@ -37,12 +37,12 @@ public class QuickFind extends DynamicConnectivity {
 	}
 
 	@Override
-	int find(int p) {
+	public int find(int p) {
 		return roots[p];
 	}
 
 	@Override
-	boolean connected(int i, int j) {
+	public boolean connected(int i, int j) {
 		return roots[i] == roots[j];
 	}
 

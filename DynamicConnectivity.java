@@ -1,6 +1,5 @@
 
-public abstract class DynamicConnectivity {
-	protected int[] roots;
+public interface DynamicConnectivity {
 	
 	/**
 	 * This method sets the root of i, and all other 
@@ -10,16 +9,16 @@ public abstract class DynamicConnectivity {
 	 * @param i first id to union together
 	 * @param j second one, keeps its root
 	 */
-	abstract void union(int i, int j);
+	public void union(int i, int j);
 	
 	/**
 	 * This returns the root or parent node in the same set 
-	 * as the inputted node.
+	 * as the inputed node.
 	 * 
 	 * @param p The node to find its parent/root node
 	 * @return The head of the set that p is in
 	 */
-	abstract int find(int p);
+	public int find(int p);
 	
 	/**
 	 * Checks to see if the two nodes i and j are in the same
@@ -29,5 +28,5 @@ public abstract class DynamicConnectivity {
 	 * @param j the second node 
 	 * @return true if have same root node, false otherwise
 	 */
-	abstract boolean connected(int i, int j);
+	public boolean connected(int i, int j);
 }
