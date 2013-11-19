@@ -10,12 +10,17 @@
  *
  * @param <T>
  */
-public class Percolation<T> {
+public class Percolation<T extends DyanmicConnectivity> {
 	private T dynamicConnector;
 	private boolean[][] grid;
 	private int size;
 	
-	
+	/**
+	 * Constructs a Percolation object. One note is that the
+	 * dyanmic Connector passed 
+	 * @param dynamicConnector
+	 * @param size
+	 */
 	public Percolation(T dynamicConnector, int size) {
 		this.size = size;
 		this.dynamicConnector = dynamicConnector;
