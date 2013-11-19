@@ -1,6 +1,6 @@
 
 public abstract class DynamicConnectivity {
-	private int[] roots;
+	protected int[] roots;
 	
 	/**
 	 * This method sets the root of i, and all other 
