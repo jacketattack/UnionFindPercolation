@@ -36,6 +36,17 @@ public class Percolation<T extends DynamicConnectivity> {
 		virtualBottomNode = (size * size) + 1; // connected to all "on" in bottom row
 	}
 	
+	/**
+	 * This 'opens' a spot in the grid by first setting its
+	 * index in the boolean 2D array to true then using
+	 * the dynamicConnector to union that spot with all adjacent
+	 * orthoganol indices that are in bounds. If the spot is in
+	 * the top or bottom row, then it is unioned with the respective
+	 * virtual node.
+	 * 
+	 * @param i row position in grid
+	 * @param j column position in grid
+	 */
 	public void open(int i, int j) {
 		if ( i < 0 || i > size - 1 || j < 0 || j > size - 1) {
 			throw new IndexOutOfBoundsException("i and/or j are out of bounds");
