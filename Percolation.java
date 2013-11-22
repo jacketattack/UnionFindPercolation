@@ -121,6 +121,17 @@ public class Percolation<T extends DynamicConnectivity> {
 		return dynamicConnector.connected(virtualBottomNode, virtualTopNode);
 	}
 	
+	public void toStringy() {
+		String outString = "";
+		for (int i = 0; i < grid.length; i++) {
+			outString += "\n";
+			for (int j = 0; j < grid[i].length; j++) {
+				outString += "  " + grid[i][j];
+			}
+		}
+		System.out.print(outString);
+	}
+	
 	
 	/**
 	 * Dynamic Connector takes in only one number for 
@@ -132,8 +143,9 @@ public class Percolation<T extends DynamicConnectivity> {
 	 * @return number id of that grid space in dynamic connector
 	 */
 	private int to1D(int i, int j) {
-		return ( (i * size) + j);
+		return ( (i * size) + j + 1);
 	}
+
 	
 	
 	
