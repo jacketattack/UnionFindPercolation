@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 
 
-public class MainPanel extends JFrame implements ActionListener {
+public class MainPanel extends JFrame {
 	
 	/** Panel that contains all the separate panels */
 	public JFrame frame = new JFrame();
@@ -32,7 +32,7 @@ public class MainPanel extends JFrame implements ActionListener {
 	private Color GOLD = new Color(218,165,32);
 	Grid grd = new Grid();
 	
-	public Percolation<T extends DynamicConnectivity> perk = new Percolation<T extends DynamicConnectivity>();
+	public JPanel[][] pArray;
 	
 	// User Interaction Panel
 	private JRadioButton union = new JRadioButton("Union Find");
@@ -47,9 +47,13 @@ public class MainPanel extends JFrame implements ActionListener {
 	private JLabel currSize = new JLabel("Size: ");
 	private int theSize = 0;
 	
+	public WeightedCompressionQuickUnion qf;
+	public QuickFind uf;
+
+	public Percolation perk;
 	
 	// Timer Stuff
-	private javax.swing.Timer timer = new Timer(1, this);
+	//private javax.swing.Timer timer = new Timer(1, this);
 	private int timerCount = 0;
 	private JLabel timerLabel = new JLabel("Timer: " + timerCount + " ms");
 	
@@ -103,6 +107,7 @@ public class MainPanel extends JFrame implements ActionListener {
 		
 		private void initalizeGrid(int size) {
 			
+			pArray = new JPanel[size][size];
 			JPanel swagPanel = new JPanel();
 			grid.removeAll();
 			grid.updateUI();
@@ -121,6 +126,7 @@ public class MainPanel extends JFrame implements ActionListener {
 					//panel.setSize(new Dimension((600/size), (600/size)));
 					panel.setVisible(true);
 					swagPanel.add(panel);
+					pArray[row][col] = panel;
 				} // end nested for loop
 			} // end for loop
 			grid.add(swagPanel);
@@ -128,9 +134,14 @@ public class MainPanel extends JFrame implements ActionListener {
 		
 		private void updateGrid() {
 			// random number stuff
+			int randRow = (int)(Math.random() * ((theSize - 0) + 1));
+			int randCol = (int)(Math.random() * ((theSize - 0) + 1));
 			
-			// while(! .percolation) if(! .isOpen) .open; else updateGrid();
-			if(!perk.isOpen()) perk.open();
+			// if(! .isOpen) .open; else updateGrid();
+			if(!perk.isOpen(randRow, randCol)) {
+				perk.open(randRow, randCol);
+				pArray[randRow][randCol].setBackground(Color.BLUE);
+			}
 			else updateGrid();
 		}
 		
@@ -160,17 +171,23 @@ public class MainPanel extends JFrame implements ActionListener {
 			
 			execute.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(union.isSelected()) select.setText("Selection: Union");
-					else if(qUnion.isSelected()) 
-						select.setText("Selection: Quick Union");
 					sizeString = sizeText.getText();
 					if(isNumeric(sizeString)) {
 						execute.setEnabled(false);
 						currSize.setText("Size: " + sizeString);
 						theSize = Integer.parseInt(sizeString);
 						grd.initalizeGrid(theSize);
-						while(!perk.percolate) grd.updateGrid();
-						timer.start();
+						if(union.isSelected()) {
+							select.setText("Selection: Union");
+							uf = new QuickFind(theSize * theSize + 2);
+							perk = new Percolation(uf, theSize);
+						} else if(qUnion.isSelected()) {
+							select.setText("Selection: Quick Union");
+							qf = new WeightedCompressionQuickUnion(theSize * theSize + 2);
+							perk = new Percolation(qf, theSize);
+						}
+						while(!perk.percolates()) grd.updateGrid();
+						timerLabel.setText("Timer: " + perk.calculateTimeTaken() + " ms");
 						repaint();
 					} else {
 						JOptionPane.showMessageDialog(frame, 
@@ -229,19 +246,5 @@ public class MainPanel extends JFrame implements ActionListener {
 			side.add(currSize);
 		} // end constructor
 	} // end inner class SidePanel
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		timerCount++;
-		timerLabel.setText("Timer: " + timerCount + " ms");
-		repaint();
-		if(timerCount >= 200) {
-			timer.stop();
-			execute.setEnabled(true);
-			timerCount = 0;
-			timerLabel.setText("Timer: " + timerCount + " ms");
-			repaint();
-		}
-	}
 	
 } // end class
