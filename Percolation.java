@@ -16,6 +16,8 @@ public class Percolation<T extends DynamicConnectivity> {
 	private int size;
 	private int virtualTopNode;
 	private int virtualBottomNode;
+	private long startTime;
+	private long endTime;
 	
 	/**
 	 * Constructs a Percolation object. One note is that the
@@ -119,6 +121,51 @@ public class Percolation<T extends DynamicConnectivity> {
 	 */
 	public boolean percolates() {
 		return dynamicConnector.connected(virtualBottomNode, virtualTopNode);
+	}
+	
+	/**
+	 * This method is for timing the Percolation object in terms of 
+	 * how fast it can percolate. This sets start time.
+	 */
+	public void startTimer() {
+		startTime = System.currentTimeMillis();
+	}
+	
+	/**
+	 * Sets value for endTime. Total time taken can be computed by
+	 * getting difference of start and end time.
+	 */
+	public void endTimer() {
+		endTime = System.currentTimeMillis();
+	}
+	
+	/**
+	 * This is to be called once the grid percolates. It gives
+	 * you the percent of all the grid positions that are 'on' so
+	 * we can get an estimate on what is needed for a grid to 
+	 * consistently percolate.
+	 * 
+	 * @return percent of grid spaces 'on'
+	 */
+	public double percentOn() {
+		double totalOn = 0;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (grid[i][j]) {
+					totalOn++;
+				}
+			}
+		}
+		return totalOn / (double) (size * size);
+	}
+	
+	/**
+	 * Time take is difference between start and end times.
+	 * 
+	 * @return time difference in milliseconds
+	 */
+	public long calculateTimeTaken() {
+		return endTime - startTime;
 	}
 	
 	public void toStringy() {
