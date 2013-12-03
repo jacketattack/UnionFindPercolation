@@ -1,10 +1,13 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,10 +17,18 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-
-@SuppressWarnings("serial")
+/**
+ * The Grand-Daddy of them all!
+ * 
+ * @author jshmtthwclrk
+ *
+ */
 public class MainPanel extends JFrame {
 	
+	/**
+	 * SerialVersionUID
+	 */
+	private static final long serialVersionUID = -7236160691262901215L;
 	/** Panel that contains all the separate panels */
 	public JFrame frame = new JFrame();
 	public JPanel main = new JPanel();
@@ -48,8 +59,14 @@ public class MainPanel extends JFrame {
 	
 	public WeightedCompressionQuickUnion qf;
 	public QuickFind uf;
+	
+	private int randRow;
+	private int randCol;
 
 	public Percolation<DynamicConnectivity> perk;
+	
+	private JLabel percent = new JLabel("Percent open: 0%");
+	private DecimalFormat df = new DecimalFormat("#.000");
 	
 	// Timer Stuff
 	//private javax.swing.Timer timer = new Timer(1, this);
@@ -133,15 +150,15 @@ public class MainPanel extends JFrame {
 		
 		private void updateGrid() {
 			// random number stuff
-			int randRow = (int)(Math.random() * ((theSize - 0) + 1));
-			int randCol = (int)(Math.random() * ((theSize - 0) + 1));
+			randRow = (int)(Math.random() * ((theSize - 1) + 1));
+			randCol = (int)(Math.random() * ((theSize - 1) + 1));
 			
 			// if(! .isOpen) .open; else updateGrid();
-			if(!perk.isOpen(randRow, randCol)) {
+			if(perk.isOpen(randRow, randCol) == false) {
 				perk.open(randRow, randCol);
 				pArray[randRow][randCol].setBackground(Color.BLUE);
 			}
-			else updateGrid();
+			
 		}
 		
 	} // end inner class Grid
@@ -172,7 +189,8 @@ public class MainPanel extends JFrame {
 				@SuppressWarnings({ "rawtypes", "unchecked" })
 				public void actionPerformed(ActionEvent e) {
 					sizeString = sizeText.getText();
-					if(isNumeric(sizeString)) {
+					if(isNumeric(sizeString) && Integer.parseInt(sizeString) <=60 
+							&& Integer.parseInt(sizeString) >= 2) {
 						execute.setEnabled(false);
 						currSize.setText("Size: " + sizeString);
 						theSize = Integer.parseInt(sizeString);
@@ -181,17 +199,24 @@ public class MainPanel extends JFrame {
 							select.setText("Selection: Union");
 							uf = new QuickFind(theSize * theSize + 2);
 							perk = new Percolation(uf, theSize);
+							perk.startTimer();
 						} else if(qUnion.isSelected()) {
 							select.setText("Selection: Quick Union");
 							qf = new WeightedCompressionQuickUnion(theSize * theSize + 2);
 							perk = new Percolation(qf, theSize);
+							perk.startTimer();
 						}
-						while(!perk.percolates()) grd.updateGrid();
+						while(perk.percolates() == false) {
+							grd.updateGrid();
+						}
+						perk.endTimer();
 						timerLabel.setText("Timer: " + perk.calculateTimeTaken() + " ms");
+						percent.setText("Percent open: " + df.format(perk.percentOn() * 100) + "%");
+						execute.setEnabled(true);
 						repaint();
 					} else {
 						JOptionPane.showMessageDialog(frame, 
-								"Please enter a valid number and press Execute",
+								"Please enter a valid number between 2 and 60, then press Execute again.",
 								"Invalid Input", JOptionPane.WARNING_MESSAGE);
 					}
 				}
@@ -239,10 +264,18 @@ public class MainPanel extends JFrame {
 		public SidePanel() {
 			side.setSize(200, 700);
 			side.setLocation(601, 0);
-			side.setBackground(Color.CYAN);
-			
-			side.add(timerLabel);
+			side.setLayout(new BoxLayout(side, BoxLayout.PAGE_AXIS));
+			//side.setBackground(Color.LIGHT_GRAY);
+			//JPanel padding = new JPanel();
+			//padding.setSize(5, 5);
+			//side.add(padding);
+			timerLabel.setFont(new Font("San-Serif", Font.PLAIN, 14));
+			select.setFont(new Font("San-Serif", Font.PLAIN, 14));
+			currSize.setFont(new Font("San-Serif", Font.PLAIN, 14));
+			percent.setFont(new Font("San-Serif", Font.PLAIN, 14));
 			side.add(select);
+			side.add(timerLabel);
+			side.add(percent);
 			side.add(currSize);
 		} // end constructor
 	} // end inner class SidePanel
