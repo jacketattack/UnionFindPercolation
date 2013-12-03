@@ -8,7 +8,7 @@ public class PercolationTest {
 	@Test
 	public final void testPercolation() {
 		int sz = 10;
-		QuickFind qf = new QuickFind(sz * sz + 2);
+		WeightedCompressionQuickUnion qf = new WeightedCompressionQuickUnion(sz * sz + 2);
 		Percolation perc = new Percolation(qf, sz);
 		assertFalse("test empty grid", perc.percolates());
 		
@@ -18,7 +18,7 @@ public class PercolationTest {
 		}
 		assertTrue("should have connection along left column", perc.percolates());
 		//perc.toStringy();
-		QuickFind qf2 = new QuickFind(sz * sz + 2);
+		WeightedCompressionQuickUnion qf2 = new WeightedCompressionQuickUnion(sz * sz + 2);
 		Percolation perc2 = new Percolation(qf2, sz);
 		// now lets open all spots along diagonal
 		for (int i = 0; i < sz; i++) {
