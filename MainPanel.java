@@ -32,7 +32,7 @@ public class MainPanel extends JFrame implements ActionListener {
 	private Color GOLD = new Color(218,165,32);
 	Grid grd = new Grid();
 	
-	public Percolation<T extends DynamicConnectivity> perk = new Percolation<T extends DynamicConnectivity>();
+	//public Percolation<T extends DynamicConnectivity> perk = new Percolation<T extends DynamicConnectivity>();
 	
 	// User Interaction Panel
 	private JRadioButton union = new JRadioButton("Union Find");
@@ -130,8 +130,8 @@ public class MainPanel extends JFrame implements ActionListener {
 			// random number stuff
 			
 			// while(! .percolation) if(! .isOpen) .open; else updateGrid();
-			if(!perk.isOpen()) perk.open();
-			else updateGrid();
+			//if(!perk.isOpen()) perk.open();
+			//else updateGrid();
 		}
 		
 	} // end inner class Grid
@@ -169,7 +169,7 @@ public class MainPanel extends JFrame implements ActionListener {
 						currSize.setText("Size: " + sizeString);
 						theSize = Integer.parseInt(sizeString);
 						grd.initalizeGrid(theSize);
-						while(!perk.percolate) grd.updateGrid();
+						//while(!perk.percolate) grd.updateGrid();
 						timer.start();
 						repaint();
 					} else {
