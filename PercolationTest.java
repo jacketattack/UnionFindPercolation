@@ -17,6 +17,7 @@ public class PercolationTest {
 			perc.open(i, 0);
 		}
 		assertTrue("should have connection along left column", perc.percolates());
+		System.out.println(perc.percentOn());
 		//perc.toStringy();
 		WeightedCompressionQuickUnion qf2 = new WeightedCompressionQuickUnion(sz * sz + 2);
 		Percolation perc2 = new Percolation(qf2, sz);
