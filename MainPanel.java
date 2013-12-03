@@ -1,7 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,9 +13,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.Timer;
 
 
+@SuppressWarnings("serial")
 public class MainPanel extends JFrame {
 	
 	/** Panel that contains all the separate panels */
@@ -50,7 +49,7 @@ public class MainPanel extends JFrame {
 	public WeightedCompressionQuickUnion qf;
 	public QuickFind uf;
 
-	public Percolation perk;
+	public Percolation<DynamicConnectivity> perk;
 	
 	// Timer Stuff
 	//private javax.swing.Timer timer = new Timer(1, this);
@@ -149,7 +148,7 @@ public class MainPanel extends JFrame {
 	
 	/**
 	 * Private Inner Class for User Interaction Panel
-	 * @author jshmtthwclrk
+	 * @author Joshua Clark
 	 *
 	 */
 	private class RadioBox {
@@ -170,6 +169,7 @@ public class MainPanel extends JFrame {
 			union.setSelected(true);
 			
 			execute.addActionListener(new ActionListener() {
+				@SuppressWarnings({ "rawtypes", "unchecked" })
 				public void actionPerformed(ActionEvent e) {
 					sizeString = sizeText.getText();
 					if(isNumeric(sizeString)) {
