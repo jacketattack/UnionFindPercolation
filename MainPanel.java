@@ -56,7 +56,7 @@ public class MainPanel extends JFrame implements ActionListener {
 	/** Main method */
 	public static void main(String [] args) {
 		@SuppressWarnings("unused")
-		AFrame aduh = new AFrame();
+		MainPanel mainPanel = new MainPanel();
 	} // end main method
 	
 	/**
