@@ -5,9 +5,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -54,18 +52,13 @@ public class MainPanel extends JFrame {
 	private JLabel gridSizeLabel = new JLabel("Enter size:");
 	private JTextField gridSizeText = new JTextField("", 5);
 	private JLabel numRunsLabel = new JLabel("Number of runs:");
-	private JTextField numRunsText = new JTextField("1", 5);
-	private String numRunsString;
+	private JTextField numRunsText = new JTextField("", 5);
 	
 	// Side Panel Information
 	private JLabel select = new JLabel("Selection: ");
 	private String sizeString;
-	private JLabel currSize = new JLabel("Grid Size: ");
+	private JLabel currSize = new JLabel("Size: ");
 	private int theSize = 0;
-	private JLabel blank1 = new JLabel(" ");
-	private JLabel blank2 = new JLabel(" ");
-	private JLabel blank3 = new JLabel(" ");
-	private JLabel blank4 = new JLabel(" ");
 	
 	public WeightedCompressionQuickUnion qf;
 	public QuickFind uf;
@@ -75,33 +68,13 @@ public class MainPanel extends JFrame {
 
 	public Percolation<DynamicConnectivity> perk;
 	
-	private JLabel percent = new JLabel("Last Percent open: 0%");
+	private JLabel percent = new JLabel("Percent open: 0%");
 	private DecimalFormat df = new DecimalFormat("#.000");
-	
-	private JLabel avgPercent = new JLabel("Avg Percent open: 0%");
-	private JLabel avgTime = new JLabel("Avg Run Time: ");
-	private JLabel runs = new JLabel("Number of Runs: ");
-	private double avgPercentNum;
-	private long avgTimeNum;
 	
 	// Timer Stuff
 	//private javax.swing.Timer timer = new Timer(1, this);
 	private int timerCount = 0;
-	private JLabel timerLabel = new JLabel("Last Run Time: " + timerCount + " ms");
-	
-	//Build Percent List
-	private String[] percentList;
-	private JLabel percentListTitle = new JLabel("");
-	private JLabel percentListLabel0 = new JLabel("");
-	private JLabel percentListLabel1 = new JLabel("");
-	private JLabel percentListLabel2 = new JLabel("");
-	private JLabel percentListLabel3 = new JLabel("");
-	private JLabel percentListLabel4 = new JLabel("");
-	private JLabel percentListLabel5 = new JLabel("");
-	private JLabel percentListLabel6 = new JLabel("");
-	private JLabel percentListLabel7 = new JLabel("");
-	private JLabel percentListLabel8 = new JLabel("");
-	private JLabel percentListLabel9 = new JLabel("");
+	private JLabel timerLabel = new JLabel("Timer: " + timerCount + " ms");
 	
 	/** Main method */
 	public static void main(String [] args) {
@@ -157,8 +130,6 @@ public class MainPanel extends JFrame {
 			
 			grid.removeAll();
 			grid.updateUI();
-			swagPanel.removeAll();
-			swagPanel.updateUI();
 			grid.setLayout(new GridLayout());
 			swagPanel.setBackground(GOLD);
 			swagPanel.setSize(600, 600);
@@ -166,17 +137,6 @@ public class MainPanel extends JFrame {
 			tileGrid.minimumLayoutSize(swagPanel);
 			swagPanel.setLayout(tileGrid);
 			swagPanel.setVisible(true);
-			
-			percentListLabel0.setText("");
-			percentListLabel1.setText("");
-			percentListLabel2.setText("");
-			percentListLabel3.setText("");
-			percentListLabel4.setText("");
-			percentListLabel5.setText("");
-			percentListLabel6.setText("");
-			percentListLabel7.setText("");
-			percentListLabel8.setText("");
-			percentListLabel9.setText("");
 			
 			for (int row = 0; row < size; row++) {
 				for (int col = 0; col < size; col++) {
@@ -231,75 +191,32 @@ public class MainPanel extends JFrame {
 			execute.addActionListener(new ActionListener() {
 				@SuppressWarnings({ "rawtypes", "unchecked" })
 				public void actionPerformed(ActionEvent e) {
-					//swagPanel.setBackground(GOLD);
+					swagPanel.setBackground(GOLD);
 					sizeString = gridSizeText.getText();
-					numRunsString = numRunsText.getText();
 					if(isNumeric(sizeString) && Integer.parseInt(sizeString) <=60 
-							&& Integer.parseInt(sizeString) >= 2 && isNumeric(numRunsString) 
-							&& Integer.parseInt(numRunsString) >= 1) {
-						int numRuns = Integer.parseInt(numRunsString);
-						percentList = new String[numRuns];
-						int i = 0;
-						avgPercentNum = 0;
-						avgTimeNum = 0;
-						while(numRuns > 0) {
-							execute.setEnabled(false);
-							currSize.setText("Grid Size: " + sizeString + " x " + sizeString);
-							theSize = Integer.parseInt(sizeString);
-							grd.initalizeGrid(theSize);
-							if(union.isSelected()) {
-								select.setText("Selection: Union");
-								uf = new QuickFind(theSize * theSize + 2);
-								perk = new Percolation(uf, theSize);
-								perk.startTimer();
-							} else if(qUnion.isSelected()) {
-								select.setText("Selection: Quick Union");
-								qf = new WeightedCompressionQuickUnion(theSize * theSize + 2);
-								perk = new Percolation(qf, theSize);
-								perk.startTimer();
-							}
-							while(perk.percolates() == false) {
-								grd.updateGrid();
-							}
-							perk.endTimer();
-							avgPercentNum = ((perk.percentOn()) + avgPercentNum);
-							String tempPercent = df.format(perk.percentOn() * 100);
-							percentList[i] = tempPercent;
-							avgTimeNum = (perk.calculateTimeTaken() + avgTimeNum);
-							timerLabel.setText("Last Run Time: " + perk.calculateTimeTaken() + " ms");
-							percent.setText("Last Percent open: " + df.format(perk.percentOn() * 100) + "%");
-							execute.setEnabled(true);
-							numRuns--;
-							i++;
-							//System.out.println(df.format(perk.percentOn() * 100));
-							
+							&& Integer.parseInt(sizeString) >= 2) {
+						execute.setEnabled(false);
+						currSize.setText("Size: " + sizeString);
+						theSize = Integer.parseInt(sizeString);
+						grd.initalizeGrid(theSize);
+						if(union.isSelected()) {
+							select.setText("Selection: Union");
+							uf = new QuickFind(theSize * theSize + 2);
+							perk = new Percolation(uf, theSize);
+							perk.startTimer();
+						} else if(qUnion.isSelected()) {
+							select.setText("Selection: Quick Union");
+							qf = new WeightedCompressionQuickUnion(theSize * theSize + 2);
+							perk = new Percolation(qf, theSize);
+							perk.startTimer();
 						}
-						avgPercentNum = avgPercentNum / Integer.parseInt(numRunsString);
-						avgTimeNum = avgTimeNum / Integer.parseInt(numRunsString);
-						avgPercent.setText("Avg Percent open: " + df.format(avgPercentNum * 100) + "%");
-						avgTime.setText("Avg Run Time: " + avgTimeNum + " ms");
-						runs.setText("Number of Runs: " + numRunsString);
-						int k;
-						if(Integer.parseInt(numRunsString) < 10){
-							k = Integer.parseInt(numRunsString);
+						while(perk.percolates() == false) {
+							grd.updateGrid();
 						}
-						else {
-							k=10;
-						}
-						
-						for(int j = i-k; j<i; j++){
-							if(j == i-k) percentListLabel0.setText("   " +percentList[i-k] + "%");
-							if(j == i-k+1) percentListLabel1.setText("   " +percentList[i-k+1] + "%");
-							if(j == i-k+2) percentListLabel2.setText("   " +percentList[i-k+2] + "%");
-							if(j == i-k+3) percentListLabel3.setText("   " +percentList[i-k+3] + "%");
-							if(j == i-k+4) percentListLabel4.setText("   " +percentList[i-k+4] + "%");
-							if(j == i-k+5) percentListLabel5.setText("   " +percentList[i-k+5] + "%");
-							if(j == i-k+6) percentListLabel6.setText("   " +percentList[i-k+6] + "%");
-							if(j == i-k+7) percentListLabel7.setText("   " +percentList[i-k+7] + "%");
-							if(j == i-k+8) percentListLabel8.setText("   " +percentList[i-k+8] + "%");
-							if(j == i-k+9) percentListLabel9.setText("   " +percentList[i-k+9] + "%");
-						}
-						percentListTitle.setText("Last "+ k +" Percentages: ");
+						perk.endTimer();
+						timerLabel.setText("Timer: " + perk.calculateTimeTaken() + " ms");
+						percent.setText("Percent open: " + df.format(perk.percentOn() * 100) + "%");
+						execute.setEnabled(true);
 						repaint();
 					} else {
 						JOptionPane.showMessageDialog(frame, 
@@ -362,42 +279,10 @@ public class MainPanel extends JFrame {
 			select.setFont(new Font("San-Serif", Font.PLAIN, 14));
 			currSize.setFont(new Font("San-Serif", Font.PLAIN, 14));
 			percent.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			avgPercent.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			avgTime.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			runs.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel9.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel8.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel7.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel6.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel5.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel4.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel3.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel2.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel1.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListLabel0.setFont(new Font("San-Serif", Font.PLAIN, 14));
-			percentListTitle.setFont(new Font("San-Serif", Font.PLAIN, 14));
 			side.add(select);
-			side.add(currSize);
-			side.add(runs);
-			side.add(blank1);
 			side.add(timerLabel);
-			side.add(avgTime);
-			side.add(blank2);
 			side.add(percent);
-			side.add(avgPercent);
-			side.add(blank3);
-			side.add(percentListTitle);
-			side.add(percentListLabel0);
-			side.add(percentListLabel1);
-			side.add(percentListLabel2);
-			side.add(percentListLabel3);
-			side.add(percentListLabel4);
-			side.add(percentListLabel5);
-			side.add(percentListLabel6);
-			side.add(percentListLabel7);
-			side.add(percentListLabel8);
-			side.add(percentListLabel9);
-			
+			side.add(currSize);
 		} // end constructor
 	} // end inner class SidePanel
 	
