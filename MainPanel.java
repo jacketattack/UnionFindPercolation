@@ -40,7 +40,8 @@ public class MainPanel extends JFrame {
 	private JPanel side = new JPanel();
 	/** Background color */
 	private Color GOLD = new Color(218,165,32);
-	Grid grd = new Grid();
+	private Grid grd = new Grid();
+	private JPanel swagPanel = new JPanel();
 	
 	public JPanel[][] pArray;
 	
@@ -48,8 +49,10 @@ public class MainPanel extends JFrame {
 	private JRadioButton union = new JRadioButton("Union Find");
 	private JRadioButton qUnion = new JRadioButton("Quick Union Find");
 	private JButton execute = new JButton("Execute");
-	private JLabel sizeLabel = new JLabel("Enter size:");
-	private JTextField sizeText = new JTextField("", 10);
+	private JLabel gridSizeLabel = new JLabel("Enter size:");
+	private JTextField gridSizeText = new JTextField("", 5);
+	private JLabel numRunsLabel = new JLabel("Number of runs:");
+	private JTextField numRunsText = new JTextField("", 5);
 	
 	// Side Panel Information
 	private JLabel select = new JLabel("Selection: ");
@@ -115,7 +118,7 @@ public class MainPanel extends JFrame {
 			GridLayout gridGrid = new GridLayout();
 			grid.setSize(600, 600);
 			grid.setLayout(gridGrid);
-			grid.setBackground(GOLD);
+			grid.setBackground(Color.DARK_GRAY);
 			grid.setLocation(0, 0);
 			
 			grid.setVisible(true);
@@ -124,7 +127,7 @@ public class MainPanel extends JFrame {
 		private void initalizeGrid(int size) {
 			
 			pArray = new JPanel[size][size];
-			JPanel swagPanel = new JPanel();
+			
 			grid.removeAll();
 			grid.updateUI();
 			grid.setLayout(new GridLayout());
@@ -178,7 +181,7 @@ public class MainPanel extends JFrame {
 			/** Panel that handles interactions with user. */
 			JPanel subPanel = new JPanel();
 			
-			radioBox.setSize(600, 100);
+			radioBox.setSize(800, 100);
 			radioBox.setBackground(Color.LIGHT_GRAY);
 			radioBox.setLocation(0, 600);
 			radioBox.setLayout(new BorderLayout());
@@ -188,7 +191,8 @@ public class MainPanel extends JFrame {
 			execute.addActionListener(new ActionListener() {
 				@SuppressWarnings({ "rawtypes", "unchecked" })
 				public void actionPerformed(ActionEvent e) {
-					sizeString = sizeText.getText();
+					swagPanel.setBackground(GOLD);
+					sizeString = gridSizeText.getText();
 					if(isNumeric(sizeString) && Integer.parseInt(sizeString) <=60 
 							&& Integer.parseInt(sizeString) >= 2) {
 						execute.setEnabled(false);
@@ -223,15 +227,17 @@ public class MainPanel extends JFrame {
 			});
 			
 			JPanel north = new JPanel();
-			north.setPreferredSize(new Dimension(600,20));
+			north.setPreferredSize(new Dimension(800,20));
 			
 			ButtonGroup bGroup = new ButtonGroup();
 			bGroup.add(union);
 			bGroup.add(qUnion);
 			subPanel.add(union);
 			subPanel.add(qUnion);
-			subPanel.add(sizeLabel);
-			subPanel.add(sizeText);
+			subPanel.add(gridSizeLabel);
+			subPanel.add(gridSizeText);
+			subPanel.add(numRunsLabel);
+			subPanel.add(numRunsText);
 			subPanel.add(execute);
 			
 			radioBox.add(north, BorderLayout.NORTH);
@@ -262,7 +268,7 @@ public class MainPanel extends JFrame {
 		 * Constructor
 		 */
 		public SidePanel() {
-			side.setSize(200, 700);
+			side.setSize(200, 600);
 			side.setLocation(601, 0);
 			side.setLayout(new BoxLayout(side, BoxLayout.PAGE_AXIS));
 			//side.setBackground(Color.LIGHT_GRAY);
