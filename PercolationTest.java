@@ -1,4 +1,7 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -7,7 +10,7 @@ public class PercolationTest {
 
 	@Test
 	public final void testPercolation() {
-		int sz = 10;
+		int sz = 100;
 		WeightedCompressionQuickUnion qf = new WeightedCompressionQuickUnion(sz * sz + 2);
 		Percolation perc = new Percolation(qf, sz);
 		assertFalse("test empty grid", perc.percolates());
@@ -27,5 +30,33 @@ public class PercolationTest {
 		}
 		//perc2.toStringy();
 		assertFalse("making sure is not connecting diagonal neighbors", perc2.percolates());
+		
+		// lets try a mock of what will actually be done.opening random spots till percolates
+		WeightedCompressionQuickUnion qf3 = new WeightedCompressionQuickUnion(sz * sz + 2);
+		Percolation<WeightedCompressionQuickUnion> perc3 = new Percolation<WeightedCompressionQuickUnion>(qf3, sz);
+		Random rand = new Random();
+		perc3.startTimer();
+		while (!perc3.percolates()) {
+			int row = rand.nextInt(sz);
+			int col = rand.nextInt(sz);
+			perc3.open(row, col);
+		}
+		perc3.endTimer();
+		System.out.println("percent on in 3rd test --> " + perc3.percentOn());
+		System.out.println("time taken --> " + perc3.calculateTimeTaken());
+		
+		// another mock test with slower union find
+		QuickFind qf4 = new QuickFind(sz * sz + 2);
+		Percolation<QuickFind> perc4 = new Percolation<QuickFind>(qf4, sz);
+		Random rand2 = new Random();
+		perc4.startTimer();
+		while (!perc4.percolates()) {
+			int row = rand2.nextInt(sz);
+			int col = rand2.nextInt(sz);
+			perc4.open(row, col);
+		}
+		perc4.endTimer();
+		System.out.println("percent on in 4th test --> " + perc4.percentOn());
+		System.out.println("time taken --> " + perc4.calculateTimeTaken());
 	}
 }
