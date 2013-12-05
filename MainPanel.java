@@ -303,6 +303,11 @@ public class MainPanel extends JFrame {
 						} // end for loop
 						percentListTitle.setText("Last "+ k +" Percentages: ");
 						repaint();
+					} else if(!(isNumeric(numRunsString) 
+							&& Integer.parseInt(numRunsString) >= 1)) {
+						JOptionPane.showMessageDialog(frame, 
+								"Please enter a valid number of runs, then press Execute again.",
+								"Invalid Input", JOptionPane.WARNING_MESSAGE);
 					} else {
 						JOptionPane.showMessageDialog(frame, 
 								"Please enter a valid number between 2 and 60, then press Execute again.",
