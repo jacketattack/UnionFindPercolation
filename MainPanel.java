@@ -74,9 +74,9 @@ public class MainPanel extends JFrame {
 	private JRadioButton qUnion = new JRadioButton("Weighted Compression Quick Union");
 	private JButton execute = new JButton("Execute");
 	private JLabel gridSizeLabel = new JLabel("Enter size:");
-	private JTextField gridSizeText = new JTextField("", 5);
+	private JTextField gridSizeText = new JTextField("", 3);
 	private JLabel numRunsLabel = new JLabel("Number of runs:");
-	private JTextField numRunsText = new JTextField("1", 5);
+	private JTextField numRunsText = new JTextField("1", 3);
 	private String numRunsString;
 	
 	// ********** Side Panel Information **********
@@ -278,7 +278,7 @@ public class MainPanel extends JFrame {
 								perk = new Percolation(uf, theSize);
 								perk.startTimer();
 							} else if(qUnion.isSelected()) {
-								select.setText("Selection: Weighted Compression Quick Union");
+								select.setText("Selection: W.C. Quick Union");
 								qf = new WeightedCompressionQuickUnion(theSize * theSize + 2);
 								perk = new Percolation(qf, theSize);
 								perk.startTimer();
