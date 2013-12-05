@@ -22,7 +22,7 @@ import javax.swing.JTextField;
  * This creates a visual representation of Percolation using Union Find.
  * 
  * @author Joshua Clark & Eric Hamilton
- * @version 2.3		December 4 2013
+ * @version 3.1		December 4 2013
  */
 public class MainPanel extends JFrame {
 	
@@ -36,21 +36,37 @@ public class MainPanel extends JFrame {
 	public JFrame frame = new JFrame();
 	/** Panel that contains all the separate panels */
 	public JPanel main = new JPanel();
+	
 	/** Panel that displays the 2-D array */
 	private JPanel grid = new JPanel();
-	/** This panel aids user with interacting with the program */
-	private JPanel radioBox = new JPanel();
-	/** The Side Panel of Information!!! */
-	private JPanel side = new JPanel();
-	/** Background color */
-	private Color GOLD = new Color(218,165,32);
-	/** Grid object */
-	private Grid grd = new Grid();
 	/** Panel that shows the visualization */
 	private JPanel swagPanel = new JPanel();
 	
+	/** Grid object */
+	private Grid grd = new Grid();
+	
+	/** This panel aids user with interacting with the program */
+	private JPanel radioBox = new JPanel();
+	
+	/** The Side Panel of Information!!! */
+	private JPanel side = new JPanel();
+
 	/** 2-D array for grid panel */
 	public JPanel[][] pArray;
+	
+	/** Percolation object */
+	public Percolation<DynamicConnectivity> perk;
+	/** Weighted Compression Quick Union object */
+ 	public WeightedCompressionQuickUnion qf;
+	/** Quick Find object */
+	public QuickFind uf;
+	
+	/** Background color */
+	private Color GOLD = new Color(218,165,32);
+	
+	// ********** Random Number Variables **********
+	private int randRow;
+	private int randCol;
 	
 	// ********** User Interaction Panel **********
 	private JRadioButton union = new JRadioButton("Union Find");
@@ -67,33 +83,19 @@ public class MainPanel extends JFrame {
 	private String sizeString;
 	private JLabel currSize = new JLabel("Grid Size: ");
 	private int theSize = 0;
-	private JLabel blank1 = new JLabel(" ");
-	private JLabel blank2 = new JLabel(" ");
-	private JLabel blank3 = new JLabel(" ");
-	
-	/** Weighted Compression Quick Union object */
- 	public WeightedCompressionQuickUnion qf;
-	/** Quick Find object */
-	public QuickFind uf;
-	
-	private int randRow;
-	private int randCol;
-
-	/** Percolation object */
-	public Percolation<DynamicConnectivity> perk;
+	private JLabel runs = new JLabel("Number of Runs: ");
 	
 	private JLabel percent = new JLabel("Last Percent open: 0%");
 	private DecimalFormat df = new DecimalFormat("#.000");
 	
 	private JLabel avgPercent = new JLabel("Avg Percent open: 0%");
-	private JLabel avgTime = new JLabel("Avg Run Time: ");
-	private JLabel runs = new JLabel("Number of Runs: ");
 	private double avgPercentNum;
+	private JLabel avgTime = new JLabel("Avg Run Time: ");
 	private long avgTimeNum;
 	
-	// ********** Timer Stuff **********
-	private int timerCount = 0;
-	private JLabel timerLabel = new JLabel("Last Run Time: " + timerCount + " ms");
+	private JLabel blank1 = new JLabel(" ");
+	private JLabel blank2 = new JLabel(" ");
+	private JLabel blank3 = new JLabel(" ");
 	
 	// ********** Build Percent List **********
 	private String[] percentList;
@@ -108,6 +110,10 @@ public class MainPanel extends JFrame {
 	private JLabel percentListLabel7 = new JLabel("");
 	private JLabel percentListLabel8 = new JLabel("");
 	private JLabel percentListLabel9 = new JLabel("");
+	
+	// ********** Timer Stuff **********
+	private int timerCount = 0;
+	private JLabel timerLabel = new JLabel("Last Run Time: " + timerCount + " ms");
 	
 	/** Main method */
 	public static void main(String [] args) {
@@ -141,7 +147,11 @@ public class MainPanel extends JFrame {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	} // end constructor
 	
-
+	/**
+	 * Private Inner Class to build Grid for percolation visualization.
+	 * @author Joshua Clark
+	 * @version 1.2		November 23 2013
+	 */
 	private class Grid {
 		
 		/**
@@ -158,6 +168,12 @@ public class MainPanel extends JFrame {
 			grid.setVisible(true);
 		} // end constructor
 		
+		/**
+		 * Takes in an int size to build a 2-D array and to build a grid of panels of 
+		 * size by size.
+		 * 
+		 * @param size
+		 */
 		private void initalizeGrid(int size) {
 			
 			pArray = new JPanel[size][size];
@@ -198,6 +214,10 @@ public class MainPanel extends JFrame {
 			grid.add(swagPanel);
 		} // end method initalizeGrid(int)
 		
+		/**
+		 * Creates random ints and checks if location is open, if it is not open it opens
+		 * the panel.
+		 */
 		private void updateGrid() {
 			// random number stuff
 			randRow = (int)(Math.random() * ((theSize - 1) + 1));
@@ -212,8 +232,8 @@ public class MainPanel extends JFrame {
 	
 	/**
 	 * Private Inner Class for User Interaction Panel
-	 * @author Joshua Clark
-	 *
+	 * @author Joshua Clark and Eric Hamilton
+	 * @version 2.1		November 25 2013
 	 */
 	private class RadioBox {
 		
@@ -235,7 +255,6 @@ public class MainPanel extends JFrame {
 			execute.addActionListener(new ActionListener() {
 				@SuppressWarnings({ "rawtypes", "unchecked" })
 				public void actionPerformed(ActionEvent e) {
-					//swagPanel.setBackground(GOLD);
 					sizeString = gridSizeText.getText();
 					numRunsString = numRunsText.getText();
 					if(isNumeric(sizeString) && Integer.parseInt(sizeString) <=60 
@@ -355,8 +374,9 @@ public class MainPanel extends JFrame {
 	
 	/**
 	 * Private Inner Class for Side Information Panel
-	 * @author Joshua Clark
-	 *
+	 * 
+	 * @author Joshua Clark and Eric Hamilton
+	 * @version 1.5		November 25 2012
 	 */
 	private class SidePanel {
 		
