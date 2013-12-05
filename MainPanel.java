@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -69,8 +70,8 @@ public class MainPanel extends JFrame {
 	private int randCol;
 	
 	// ********** User Interaction Panel **********
-	private JRadioButton union = new JRadioButton("Union Find");
-	private JRadioButton qUnion = new JRadioButton("Quick Union Find");
+	private JRadioButton union = new JRadioButton("Quick Find");
+	private JRadioButton qUnion = new JRadioButton("Weighted Compression Quick Union");
 	private JButton execute = new JButton("Execute");
 	private JLabel gridSizeLabel = new JLabel("Enter size:");
 	private JTextField gridSizeText = new JTextField("", 5);
@@ -220,8 +221,9 @@ public class MainPanel extends JFrame {
 		 */
 		private void updateGrid() {
 			// random number stuff
-			randRow = (int)(Math.random() * ((theSize - 1) + 1));
-			randCol = (int)(Math.random() * ((theSize - 1) + 1));
+			Random rand = new Random();
+			randRow = rand.nextInt(theSize);
+			randCol = rand.nextInt(theSize);
 			
 			if(perk.isOpen(randRow, randCol) == false) {
 				perk.open(randRow, randCol);
@@ -257,8 +259,7 @@ public class MainPanel extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					sizeString = gridSizeText.getText();
 					numRunsString = numRunsText.getText();
-					if(isNumeric(sizeString) && Integer.parseInt(sizeString) <=60 
-							&& Integer.parseInt(sizeString) >= 2 && isNumeric(numRunsString) 
+					if(isNumeric(sizeString) && Integer.parseInt(sizeString) >= 2 && isNumeric(numRunsString) 
 							&& Integer.parseInt(numRunsString) >= 1) {
 						/** Number of times to run program */
 						int numRuns = Integer.parseInt(numRunsString);
@@ -267,17 +268,17 @@ public class MainPanel extends JFrame {
 						avgPercentNum = 0;
 						avgTimeNum = 0;
 						while(numRuns > 0) {
-							execute.setEnabled(false);
+							//execute.setEnabled(false);
 							currSize.setText("Grid Size: " + sizeString + " x " + sizeString);
 							theSize = Integer.parseInt(sizeString);
 							grd.initalizeGrid(theSize);
 							if(union.isSelected()) {
-								select.setText("Selection: Union");
+								select.setText("Selection: Quick Find");
 								uf = new QuickFind(theSize * theSize + 2);
 								perk = new Percolation(uf, theSize);
 								perk.startTimer();
 							} else if(qUnion.isSelected()) {
-								select.setText("Selection: Quick Union");
+								select.setText("Selection: Weighted Compression Quick Union");
 								qf = new WeightedCompressionQuickUnion(theSize * theSize + 2);
 								perk = new Percolation(qf, theSize);
 								perk.startTimer();
@@ -327,11 +328,11 @@ public class MainPanel extends JFrame {
 						JOptionPane.showMessageDialog(frame, 
 								"Please enter a valid number of runs, then press Execute again.",
 								"Invalid Input", JOptionPane.WARNING_MESSAGE);
-					} else {
-						JOptionPane.showMessageDialog(frame, 
-								"Please enter a valid number between 2 and 60, then press Execute again.",
-								"Invalid Input", JOptionPane.WARNING_MESSAGE);
-					} // end inner else
+					} //else {
+//						JOptionPane.showMessageDialog(frame, 
+//								"Please enter a valid number between 2 and 60, then press Execute again.",
+//								"Invalid Input", JOptionPane.WARNING_MESSAGE);
+//					} // end inner else
 				} // end else
 			});
 			
