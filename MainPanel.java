@@ -3,9 +3,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.BoxLayout;
@@ -54,6 +56,8 @@ public class MainPanel extends JFrame {
 
 	/** 2-D array for grid panel */
 	public JPanel[][] pArray;
+	/** Percolated path object so help show in visualization */
+	private ArrayList<Point> path;
 	
 	/** Percolation object */
 	public Percolation<DynamicConnectivity> perk;
@@ -297,6 +301,9 @@ public class MainPanel extends JFrame {
 							numRuns--;
 							i++;
 						} // end while
+						path = perk.percolationPath();
+						for(Point p : path)
+							pArray[(int) p.getX()][(int) p.getY()].setBackground(Color.GREEN);
 						avgPercentNum = avgPercentNum / Integer.parseInt(numRunsString);
 						avgTimeNum = avgTimeNum / Integer.parseInt(numRunsString);
 						avgPercent.setText("Avg Percent open: " + df.format(avgPercentNum * 100) + "%");
