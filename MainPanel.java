@@ -5,9 +5,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -21,9 +19,10 @@ import javax.swing.JTextField;
 
 /**
  * The Grand-Daddy of them all!
+ * This creates a visual representation of Percolation using Union Find.
  * 
- * @author jshmtthwclrk
- *
+ * @author Joshua Clark & Eric Hamilton
+ * @version 2.3		December 4 2013
  */
 public class MainPanel extends JFrame {
 	
@@ -31,23 +30,29 @@ public class MainPanel extends JFrame {
 	 * SerialVersionUID
 	 */
 	private static final long serialVersionUID = -7236160691262901215L;
-	/** Panel that contains all the separate panels */
+	
+	// ********** General Global Variables **********
+	/** Bounding Box for Panels */
 	public JFrame frame = new JFrame();
+	/** Panel that contains all the separate panels */
 	public JPanel main = new JPanel();
 	/** Panel that displays the 2-D array */
 	private JPanel grid = new JPanel();
-	/** Dis Panel does da choosin */
+	/** This panel aids user with interacting with the program */
 	private JPanel radioBox = new JPanel();
 	/** The Side Panel of Information!!! */
 	private JPanel side = new JPanel();
 	/** Background color */
 	private Color GOLD = new Color(218,165,32);
+	/** Grid object */
 	private Grid grd = new Grid();
+	/** Panel that shows the visualization */
 	private JPanel swagPanel = new JPanel();
 	
+	/** 2-D array for grid panel */
 	public JPanel[][] pArray;
 	
-	// User Interaction Panel
+	// ********** User Interaction Panel **********
 	private JRadioButton union = new JRadioButton("Union Find");
 	private JRadioButton qUnion = new JRadioButton("Quick Union Find");
 	private JButton execute = new JButton("Execute");
@@ -57,7 +62,7 @@ public class MainPanel extends JFrame {
 	private JTextField numRunsText = new JTextField("1", 5);
 	private String numRunsString;
 	
-	// Side Panel Information
+	// ********** Side Panel Information **********
 	private JLabel select = new JLabel("Selection: ");
 	private String sizeString;
 	private JLabel currSize = new JLabel("Grid Size: ");
@@ -65,14 +70,16 @@ public class MainPanel extends JFrame {
 	private JLabel blank1 = new JLabel(" ");
 	private JLabel blank2 = new JLabel(" ");
 	private JLabel blank3 = new JLabel(" ");
-	private JLabel blank4 = new JLabel(" ");
 	
-	public WeightedCompressionQuickUnion qf;
+	/** Weighted Compression Quick Union object */
+ 	public WeightedCompressionQuickUnion qf;
+	/** Quick Find object */
 	public QuickFind uf;
 	
 	private int randRow;
 	private int randCol;
 
+	/** Percolation object */
 	public Percolation<DynamicConnectivity> perk;
 	
 	private JLabel percent = new JLabel("Last Percent open: 0%");
@@ -84,12 +91,11 @@ public class MainPanel extends JFrame {
 	private double avgPercentNum;
 	private long avgTimeNum;
 	
-	// Timer Stuff
-	//private javax.swing.Timer timer = new Timer(1, this);
+	// ********** Timer Stuff **********
 	private int timerCount = 0;
 	private JLabel timerLabel = new JLabel("Last Run Time: " + timerCount + " ms");
 	
-	//Build Percent List
+	// ********** Build Percent List **********
 	private String[] percentList;
 	private JLabel percentListTitle = new JLabel("");
 	private JLabel percentListLabel0 = new JLabel("");
@@ -113,6 +119,7 @@ public class MainPanel extends JFrame {
 	 * Constructor that sets up the Main Panel for Union Find Visualization.
 	 */
 	public MainPanel() {
+		
 		frame.setSize(800, 700);
 		frame.setResizable(false);
 		frame.setTitle("Union Find");
@@ -196,14 +203,11 @@ public class MainPanel extends JFrame {
 			randRow = (int)(Math.random() * ((theSize - 1) + 1));
 			randCol = (int)(Math.random() * ((theSize - 1) + 1));
 			
-			// if(! .isOpen) .open; else updateGrid();
 			if(perk.isOpen(randRow, randCol) == false) {
 				perk.open(randRow, randCol);
 				pArray[randRow][randCol].setBackground(Color.BLUE);
-			}
-			
-		}
-		
+			} // end if statement
+		} // end method updateGrid
 	} // end inner class Grid
 	
 	/**
@@ -237,6 +241,7 @@ public class MainPanel extends JFrame {
 					if(isNumeric(sizeString) && Integer.parseInt(sizeString) <=60 
 							&& Integer.parseInt(sizeString) >= 2 && isNumeric(numRunsString) 
 							&& Integer.parseInt(numRunsString) >= 1) {
+						/** Number of times to run program */
 						int numRuns = Integer.parseInt(numRunsString);
 						percentList = new String[numRuns];
 						int i = 0;
@@ -257,10 +262,10 @@ public class MainPanel extends JFrame {
 								qf = new WeightedCompressionQuickUnion(theSize * theSize + 2);
 								perk = new Percolation(qf, theSize);
 								perk.startTimer();
-							}
+							} // end else if
 							while(perk.percolates() == false) {
 								grd.updateGrid();
-							}
+							} // end while
 							perk.endTimer();
 							avgPercentNum = ((perk.percentOn()) + avgPercentNum);
 							String tempPercent = df.format(perk.percentOn() * 100);
@@ -271,9 +276,7 @@ public class MainPanel extends JFrame {
 							execute.setEnabled(true);
 							numRuns--;
 							i++;
-							//System.out.println(df.format(perk.percentOn() * 100));
-							
-						}
+						} // end while
 						avgPercentNum = avgPercentNum / Integer.parseInt(numRunsString);
 						avgTimeNum = avgTimeNum / Integer.parseInt(numRunsString);
 						avgPercent.setText("Avg Percent open: " + df.format(avgPercentNum * 100) + "%");
@@ -282,10 +285,9 @@ public class MainPanel extends JFrame {
 						int k;
 						if(Integer.parseInt(numRunsString) < 10){
 							k = Integer.parseInt(numRunsString);
-						}
-						else {
+						} else {
 							k=10;
-						}
+						} // end inner else
 						
 						for(int j = i-k; j<i; j++){
 							if(j == i-k) percentListLabel0.setText("   " +percentList[i-k] + "%");
@@ -298,23 +300,28 @@ public class MainPanel extends JFrame {
 							if(j == i-k+7) percentListLabel7.setText("   " +percentList[i-k+7] + "%");
 							if(j == i-k+8) percentListLabel8.setText("   " +percentList[i-k+8] + "%");
 							if(j == i-k+9) percentListLabel9.setText("   " +percentList[i-k+9] + "%");
-						}
+						} // end for loop
 						percentListTitle.setText("Last "+ k +" Percentages: ");
 						repaint();
 					} else {
 						JOptionPane.showMessageDialog(frame, 
 								"Please enter a valid number between 2 and 60, then press Execute again.",
 								"Invalid Input", JOptionPane.WARNING_MESSAGE);
-					}
-				}
+					} // end inner else
+				} // end else
 			});
 			
+			// Format help
+			/** For Formating panel correctly */
 			JPanel north = new JPanel();
 			north.setPreferredSize(new Dimension(800,20));
 			
+			// Create Button Group for Radio Buttons
 			ButtonGroup bGroup = new ButtonGroup();
 			bGroup.add(union);
 			bGroup.add(qUnion);
+			
+			// Adding objects to subPanel
 			subPanel.add(union);
 			subPanel.add(qUnion);
 			subPanel.add(gridSizeLabel);
@@ -323,6 +330,7 @@ public class MainPanel extends JFrame {
 			subPanel.add(numRunsText);
 			subPanel.add(execute);
 			
+			// Adding objects to RadioBox Panel
 			radioBox.add(north, BorderLayout.NORTH);
 			radioBox.add(subPanel, BorderLayout.CENTER);
 			
@@ -351,13 +359,13 @@ public class MainPanel extends JFrame {
 		 * Constructor
 		 */
 		public SidePanel() {
+			
+			// Set Side Panel Up
 			side.setSize(200, 600);
 			side.setLocation(601, 0);
 			side.setLayout(new BoxLayout(side, BoxLayout.PAGE_AXIS));
-			//side.setBackground(Color.LIGHT_GRAY);
-			//JPanel padding = new JPanel();
-			//padding.setSize(5, 5);
-			//side.add(padding);
+
+			// Set Font type
 			timerLabel.setFont(new Font("San-Serif", Font.PLAIN, 14));
 			select.setFont(new Font("San-Serif", Font.PLAIN, 14));
 			currSize.setFont(new Font("San-Serif", Font.PLAIN, 14));
@@ -376,6 +384,8 @@ public class MainPanel extends JFrame {
 			percentListLabel1.setFont(new Font("San-Serif", Font.PLAIN, 14));
 			percentListLabel0.setFont(new Font("San-Serif", Font.PLAIN, 14));
 			percentListTitle.setFont(new Font("San-Serif", Font.PLAIN, 14));
+			
+			// Adding items to Side Panel
 			side.add(select);
 			side.add(currSize);
 			side.add(runs);
