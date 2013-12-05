@@ -1,6 +1,8 @@
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.junit.Test;
@@ -10,7 +12,7 @@ public class PercolationTest {
 
 	@Test
 	public final void testPercolation() {
-		int sz = 100;
+		int sz = 10;
 		WeightedCompressionQuickUnion qf = new WeightedCompressionQuickUnion(sz * sz + 2);
 		Percolation perc = new Percolation(qf, sz);
 		assertFalse("test empty grid", perc.percolates());
@@ -44,6 +46,7 @@ public class PercolationTest {
 		perc3.endTimer();
 		System.out.println("percent on in 3rd test --> " + perc3.percentOn());
 		System.out.println("time taken --> " + perc3.calculateTimeTaken());
+		toStringy(perc3.percolationPath());
 		
 		// another mock test with slower union find
 		QuickFind qf4 = new QuickFind(sz * sz + 2);
@@ -58,5 +61,15 @@ public class PercolationTest {
 		perc4.endTimer();
 		System.out.println("percent on in 4th test --> " + perc4.percentOn());
 		System.out.println("time taken --> " + perc4.calculateTimeTaken());
+		toStringy(perc4.percolationPath());
+	}
+	
+	public void toStringy(ArrayList<Point> path) {
+		StringBuilder lol = new StringBuilder("  PERCOLATION PATH \n");
+		for (int i = 0; i < path.size(); i++) {
+			lol.append("Point:   " + path.get(i).x + "   " + path.get(i).y + "\n");
+		}
+		System.out.println("size" + "  " + path.size());
+		System.out.println(lol);
 	}
 }

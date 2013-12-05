@@ -1,3 +1,6 @@
+import java.awt.Point;
+import java.util.ArrayList;
+
 /**
  * This class is the back-end for the Percolation problem 
  * we are attempting to solve with different implementations
@@ -166,6 +169,26 @@ public class Percolation<T extends DynamicConnectivity> {
 	 */
 	public long calculateTimeTaken() {
 		return endTime - startTime;
+	}
+	
+	/**
+	 * Returns indices of all nodes apart of the path that the successful
+	 * percolation takes.
+	 * 
+	 * @return coordinates of grid spaces in path
+	 */
+	public ArrayList<Point> percolationPath() {
+		ArrayList<Point> path = new ArrayList<Point>();
+		int currGridRoot = 0;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				currGridRoot = dynamicConnector.find(to1D(i,j));
+				if (currGridRoot == dynamicConnector.find(virtualBottomNode) && currGridRoot == dynamicConnector.find(virtualTopNode)) {
+					path.add(new Point(i, j));
+				}
+			}
+		}
+		return path;
 	}
 	
 	public void toStringy() {
