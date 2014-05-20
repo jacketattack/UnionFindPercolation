@@ -1,3 +1,4 @@
+package src;
 
 /**
  * QuickFind data structure for DynamicConnectivity problem.

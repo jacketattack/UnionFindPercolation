@@ -1,11 +1,12 @@
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.junit.Test;
+import src.WeightedCompressionQuickUnion;
 
 
 public class PercolationTest {

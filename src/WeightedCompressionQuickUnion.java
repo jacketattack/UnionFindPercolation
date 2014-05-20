@@ -1,3 +1,4 @@
+package src;
 
 public class WeightedCompressionQuickUnion implements DynamicConnectivity {
 	private int[] roots; // root of tree of each node
