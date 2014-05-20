@@ -5,11 +5,11 @@ UnionFindPercolation
 
 #Team Members
 
-Joshua Clark
+[Joshua Clark](https://github.com/jshmtthwclrk)
 
-Eric Hamilton
+[Eric Hamilton](https://github.com/eham30)
 
-Trevor May
+[Trevor May](https://github.com/jacketattack)
 
 
 #Screenshots
